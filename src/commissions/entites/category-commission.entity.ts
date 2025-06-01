@@ -8,14 +8,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from '../../user.entity';
-import { VendorEntity } from '../../vendor.entity';
-import { ProductEntity } from '../../product.entity';
-import { CategoryEntity } from '../../category.entity';
+import { User } from '../../users/entities/user.entity';
+import { Category } from '../../categories/entities/category.entity';
 
 @Entity('category-commission')
 export class CategoryCommissionEntity {
-
   @PrimaryGeneratedColumn()
   @ApiProperty({ description: 'Primary key' })
   id: number;
@@ -25,7 +22,9 @@ export class CategoryCommissionEntity {
   percentage: number;
 
   @Column({ type: 'datetime', nullable: true })
-  @ApiProperty({ description: 'Start date for time-based commission (nullable)' })
+  @ApiProperty({
+    description: 'Start date for time-based commission (nullable)',
+  })
   valid_from: Date;
 
   @Column({ type: 'datetime', nullable: true })
@@ -36,10 +35,10 @@ export class CategoryCommissionEntity {
   @ApiProperty({ description: 'Optional note explaining override reason' })
   note: string;
 
-  @ManyToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'created_by' })
   @ApiProperty({ description: 'Admin who created this rule' })
-  createdBy: UserEntity;
+  createdBy: User;
 
   @CreateDateColumn()
   @ApiProperty({ description: 'Creation timestamp' })
@@ -49,10 +48,8 @@ export class CategoryCommissionEntity {
   @ApiProperty({ description: 'Last update timestamp' })
   updated_at: Date;
 
-
-  @ManyToOne(() => CategoryEntity)
+  @ManyToOne(() => Category)
   @JoinColumn({ name: 'category_id' })
   @ApiProperty({ description: 'Target category' })
-  category: CategoryEntity;
-
+  category: Category;
 }

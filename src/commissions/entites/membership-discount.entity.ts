@@ -8,14 +8,14 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from '../../user.entity';
-import { VendorEntity } from '../../vendor.entity';
-import { ProductEntity } from '../../product.entity';
-import { CategoryEntity } from '../../category.entity';
+
+import { ProductEntity } from '../../products/entities/product.entity';
+import { Category } from '../../categories/entities/category.entity';
+import { User } from '../../users/entities/user.entity';
+import { VendorEntity } from '../../vendors/entities/vendor.entity';
 
 @Entity('membership-discount')
 export class MembershipDiscountEntity {
-
   @PrimaryGeneratedColumn()
   @ApiProperty({ description: 'Primary key' })
   id: number;
@@ -25,7 +25,9 @@ export class MembershipDiscountEntity {
   percentage: number;
 
   @Column({ type: 'datetime', nullable: true })
-  @ApiProperty({ description: 'Start date for time-based commission (nullable)' })
+  @ApiProperty({
+    description: 'Start date for time-based commission (nullable)',
+  })
   valid_from: Date;
 
   @Column({ type: 'datetime', nullable: true })
@@ -36,10 +38,10 @@ export class MembershipDiscountEntity {
   @ApiProperty({ description: 'Optional note explaining override reason' })
   note: string;
 
-  @ManyToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'created_by' })
   @ApiProperty({ description: 'Admin who created this rule' })
-  createdBy: UserEntity;
+  createdBy: User;
 
   @CreateDateColumn()
   @ApiProperty({ description: 'Creation timestamp' })
@@ -49,10 +51,8 @@ export class MembershipDiscountEntity {
   @ApiProperty({ description: 'Last update timestamp' })
   updated_at: Date;
 
-
-  @ManyToOne(() => VendorEntity)
+  @ManyToOne(() => VendorEntity, { eager: true })
   @JoinColumn({ name: 'vendor_id' })
   @ApiProperty({ description: 'Target vendor' })
   vendor: VendorEntity;
-
 }

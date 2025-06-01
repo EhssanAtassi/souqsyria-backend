@@ -8,14 +8,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from '../../user.entity';
-import { VendorEntity } from '../../vendor.entity';
-import { ProductEntity } from '../../product.entity';
-import { CategoryEntity } from '../../category.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('commission-audit-log')
 export class CommissionAuditLogEntity {
-
   @PrimaryGeneratedColumn()
   @ApiProperty({ description: 'Primary key' })
   id: number;
@@ -25,7 +21,9 @@ export class CommissionAuditLogEntity {
   percentage: number;
 
   @Column({ type: 'datetime', nullable: true })
-  @ApiProperty({ description: 'Start date for time-based commission (nullable)' })
+  @ApiProperty({
+    description: 'Start date for time-based commission (nullable)',
+  })
   valid_from: Date;
 
   @Column({ type: 'datetime', nullable: true })
@@ -36,10 +34,10 @@ export class CommissionAuditLogEntity {
   @ApiProperty({ description: 'Optional note explaining override reason' })
   note: string;
 
-  @ManyToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'created_by' })
   @ApiProperty({ description: 'Admin who created this rule' })
-  createdBy: UserEntity;
+  createdBy: User;
 
   @CreateDateColumn()
   @ApiProperty({ description: 'Creation timestamp' })
@@ -48,5 +46,4 @@ export class CommissionAuditLogEntity {
   @UpdateDateColumn()
   @ApiProperty({ description: 'Last update timestamp' })
   updated_at: Date;
-
 }

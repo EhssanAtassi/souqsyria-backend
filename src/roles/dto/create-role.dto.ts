@@ -14,4 +14,7 @@ export class CreateRoleDto {
   @IsOptional()
   @IsString()
   description?: string;
+  @IsOptional()
+  @ApiProperty({ example: false, required: false })
+  isDefault?: boolean;
 }
