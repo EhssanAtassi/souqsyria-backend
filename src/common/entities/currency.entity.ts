@@ -261,7 +261,7 @@ export class ExchangeRateHistoryEntity {
   @Column({ length: 100 })
   source: string;
 
-  /**
+  /**sss
    * Additional rate metadata
    */
   @Column({ type: 'json', nullable: true })
