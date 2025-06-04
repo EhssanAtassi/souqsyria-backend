@@ -14,6 +14,7 @@ import { Role } from '../roles/entities/role.entity';
 import { Route } from './entities/route.entity';
 import { RoutesService } from './routes/routes.service';
 import { RoutesController } from './routes/routes.controller';
+import { User } from '../users/entities/user.entity';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { RoutesController } from './routes/routes.controller';
       RolePermission,
       ActivityLog,
       Route,
+      // User,
     ]),
     UsersModule,
     forwardRef(() => RolesModule),

@@ -7,10 +7,12 @@ import { City } from './entities/city.entity';
 import { Country } from '../country/entities/country.entity';
 import { Region } from '../region/entities/region.entity';
 import { CityService } from './service/city.service';
+import { User } from '../../users/entities/user.entity';
+import { Route } from '../../access-control/entities/route.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([City, Country, Region]),
+    TypeOrmModule.forFeature([City, Country, Region, User, Route]),
     AccessControlModule,
   ],
   providers: [CityService],

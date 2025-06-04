@@ -12,8 +12,8 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  synchronize: true,
-  dropSchema: true,
-  logging: true, // Enable logging to see what's happening
+  synchronize: false,
+  dropSchema: false,
+  logging: false, // Enable logging to see what's happening
   cache: false, // Disable caching during schema recreation
 };

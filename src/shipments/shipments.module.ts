@@ -17,6 +17,7 @@ import { ShipmentStatusLog } from './entities/shipment-status-log.entity';
 import { Order } from '../orders/entities/order.entity';
 import { OrderItem } from '../orders/entities/order-item.entity';
 import { AccessControlModule } from '../access-control/access-control.module';
+import { Route } from '../access-control/entities/route.entity';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AccessControlModule } from '../access-control/access-control.module';
       Order,
       OrderItem,
       User,
+      Route
     ]),
     AccessControlModule,
   ],

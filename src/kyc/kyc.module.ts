@@ -9,8 +9,10 @@ import { UsersModule } from '../users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KycDocument } from './entites/kyc-document.entity';
 import { AdminKycController } from './admin-kyc.controller';
+import { User } from '../users/entities/user.entity';
+import { Route } from '../access-control/entities/route.entity';
 @Module({
-  imports: [TypeOrmModule.forFeature([KycDocument]), UsersModule],
+  imports: [TypeOrmModule.forFeature([KycDocument, User, Route]), UsersModule],
   providers: [KycService],
   controllers: [KycController, AdminKycController],
   exports: [KycService],

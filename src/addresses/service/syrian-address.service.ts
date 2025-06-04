@@ -30,7 +30,8 @@ import {
   SyrianAddressEntity,
   AddressType,
   AddressStatus,
-} from '../entities/syrian-address.entity';
+  VerificationMethod,
+} from '../entities';
 
 /**
  * Address validation result
@@ -536,7 +537,7 @@ export class SyrianAddressService {
       ...addressData,
       status: validation.confidence >= 90 ? AddressStatus.VERIFIED : AddressStatus.PENDING_VERIFICATION,
       validation: {
-        verificationMethod: 'automated',
+        verificationMethod: VerificationMethod.AUTOMATED,
         confidenceScore: validation.confidence,
         issues: validation.issues,
       },

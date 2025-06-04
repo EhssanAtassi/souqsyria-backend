@@ -22,41 +22,41 @@ import { Roles } from '../../common/decorators/roles.decorator';
 
 @ApiTags('Admin Routes Management')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard) //
 @Controller('admin/routes')
 export class RoutesController {
   constructor(private readonly routesService: RoutesService) {}
 
   @Post()
-  @Roles('admin')
+  // //@Roles('admin')
   @ApiOperation({ summary: 'Create new route linked to permission' })
   async create(@Body() dto: CreateRouteDto) {
     return this.routesService.create(dto);
   }
 
   @Get()
-  @Roles('admin')
+  //@Roles('admin')
   @ApiOperation({ summary: 'List all routes' })
   async findAll() {
     return this.routesService.findAll();
   }
 
   @Get(':id')
-  @Roles('admin')
+  //@Roles('admin')
   @ApiOperation({ summary: 'Get route by ID' })
   async findOne(@Param('id') id: number) {
     return this.routesService.findOne(+id);
   }
 
   @Put(':id')
-  @Roles('admin')
+  //@Roles('admin')
   @ApiOperation({ summary: 'Update route by ID' })
   async update(@Param('id') id: number, @Body() dto: UpdateRouteDto) {
     return this.routesService.update(+id, dto);
   }
 
   @Delete(':id')
-  @Roles('admin')
+  //@Roles('admin')
   @ApiOperation({ summary: 'Delete route by ID' })
   async remove(@Param('id') id: number) {
     return this.routesService.remove(+id);

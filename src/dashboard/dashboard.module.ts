@@ -25,6 +25,8 @@ import { ProductEntity } from '../products/entities/product.entity';
 import { StockAlertEntity } from '../stock/entities/stock-alert.entity';
 import { CommissionsModule } from '../commissions/commissions.module';
 import { AccessControlModule } from '../access-control/access-control.module';
+import { User } from '../users/entities/user.entity';
+import { Route } from '../access-control/entities/route.entity';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { AccessControlModule } from '../access-control/access-control.module';
       ProductEntity,
       StockAlertEntity,
       Shipment,
+      User,
+      Route
     ]),
     CommissionsModule,
     AccessControlModule, // ✅ Added to provide RouteRepository to PermissionsGuard

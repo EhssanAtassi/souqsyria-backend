@@ -14,10 +14,12 @@ import { CartController } from './controller/cart.controller';
 import { ProductVariant } from '../products/variants/entities/product-variant.entity';
 import { CartService } from './service/cart.service';
 import { AccessControlModule } from '../access-control/access-control.module';
+import { User } from '../users/entities/user.entity';
+import { Route } from '../access-control/entities/route.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Cart, CartItem, ProductVariant]),
+    TypeOrmModule.forFeature([Cart, CartItem, ProductVariant, User, Route]),
     AccessControlModule,
   ],
   controllers: [CartController],

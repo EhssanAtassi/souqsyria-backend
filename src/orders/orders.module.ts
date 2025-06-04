@@ -15,6 +15,7 @@ import { StockModule } from '../stock/stock.module';
 import { AccessControlModule } from '../access-control/access-control.module';
 import { PaymentModule } from '../payment/payment.module';
 import { RefundModule } from '../refund/refund.module';
+import { Route } from '../access-control/entities/route.entity';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { RefundModule } from '../refund/refund.module';
       ProductVariant,
       User,
       ReturnRequest,
+      Route
     ]),
     ShipmentsModule,
     forwardRef(() => StockModule),

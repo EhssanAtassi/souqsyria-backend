@@ -38,6 +38,7 @@ import { AddressesModule } from './addresses/addresses.module';
 import { PaymentModule } from './payment/payment.module';
 import { RefundModule } from './refund/refund.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
+import { GuardsModule } from './common/guards/guards.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { AuditLogModule } from './audit-log/audit-log.module';
     PaymentModule,
     RefundModule,
     AuditLogModule,
+    GuardsModule,
   ],
   controllers: [AppController],
   providers: [

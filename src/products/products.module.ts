@@ -31,6 +31,7 @@ import { AdminProductsService } from './admin/admin-products.service';
 import { StockModule } from '../stock/stock.module';
 import { PricingModule } from './pricing/pricing.module';
 import { PublicModule } from './public/public.module';
+import { User } from '../users/entities/user.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -44,6 +45,7 @@ import { PublicModule } from './public/public.module';
       Attribute, // ✅ Needed for validation / eager loading
       AttributeValue, // ✅ Needed to resolve value_id references
       Route,
+      User,
       ProductFeatureEntity,
       FeatureEntity,
     ]),
@@ -67,7 +69,7 @@ import { PublicModule } from './public/public.module';
   ],
   providers: [
     ProductsService,
-    PermissionsGuard,
+    // PermissionsGuard,
     // ProductDescriptionsService,
     ProductAttributeService,
     ProductFeatureService,

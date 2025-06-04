@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(rm:*)",
+      "Bash(npm run start:dev:*)",
+      "Bash(timeout 15s npm run start:dev)",
+      "Bash(npm run build:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": false
+}
