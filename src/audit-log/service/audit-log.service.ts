@@ -31,6 +31,8 @@ import { BulkAuditLogResponseDto } from '../dto/bulk-audit-log-response-dto';
 import { SecurityMonitoringResponseDto } from '../dto/security-monitoring-response.dto';
 import { HealthResponseDto } from '../dto/health-response.dto';
 import { ExportResponseDto } from '../dto/export-response.dto';
+import { SentryService } from '../../common/services/sentry.service';
+import { ProductionLoggerService } from '../../common/services/logger.service';
 
 /**
  * ✅ ENHANCED Enterprise Audit Log Service for SouqSyria
@@ -59,6 +61,8 @@ export class AuditLogService {
   constructor(
     @InjectRepository(AuditLog)
     private readonly auditLogRepository: Repository<AuditLog>,
+    private readonly productionLogger: ProductionLoggerService, // ← Add this
+    private readonly sentryService: SentryService,
   ) {
     this.logger.log('🚀 Enhanced Audit Log Service initialized for SouqSyria');
     this.initializePerformanceTracking();
@@ -281,6 +285,13 @@ export class AuditLogService {
 
       this.logger.log(
         `✅ [${requestId}] Complex log saved: ID ${savedLog.id} (${processingTime}ms)`,
+      );
+      // Add this new line:
+      this.productionLogger.logAuditEvent(
+        savedLog.action,
+        savedLog.actorId,
+        true,
+        processingTime,
       );
       return savedLog;
     } catch (error) {
@@ -592,7 +603,12 @@ export class AuditLogService {
       this.logger.log(
         `✅ [${requestId}] Simple log saved: ID ${savedLog.id} (${processingTime}ms)`,
       );
-
+      this.productionLogger.logAuditEvent(
+        savedLog.action,
+        savedLog.actorId,
+        true,
+        processingTime,
+      );
       return savedLog;
     } catch (error) {
       this.updatePerformanceMetrics(Date.now() - startTime, false);

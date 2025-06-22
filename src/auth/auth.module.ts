@@ -10,11 +10,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LoginLog } from './entity/login-log.entity';
+import { EmailService } from './service/email.service';
+import { TokenBlacklist } from './entity/token-blacklist.entity';
 
 @Module({
   imports: [
     UsersModule,
-    TypeOrmModule.forFeature([User, Role,LoginLog]),
+    TypeOrmModule.forFeature([User, Role, LoginLog,TokenBlacklist]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -27,7 +29,7 @@ import { LoginLog } from './entity/login-log.entity';
     ConfigModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, EmailService],
   exports: [AuthService],
 })
 export class AuthModule {}

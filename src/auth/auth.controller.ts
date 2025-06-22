@@ -11,6 +11,9 @@ import {
   Post,
   Body,
   Req,
+  Put,
+  BadRequestException,
+  Delete,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { FirebaseAuthGuard } from './guards/firebase-auth.guard';
@@ -22,6 +25,14 @@ import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { LogoutDto } from './dto/logout.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ResendOtpDto } from './dto/resend-otp.dto';
+import { DeleteAccountDto } from './dto/delete-account.dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -115,5 +126,136 @@ export class AuthController {
         message: 'Login failed',
       };
     }
+  }
+  /**
+   * @route POST /auth/forgot-password
+   * @description Send password reset email with token
+   */
+  @ApiOperation({ summary: 'Send password reset email' })
+  @Post('forgot-password')
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    const result = await this.authService.forgotPassword(forgotPasswordDto);
+    return {
+      success: true,
+      ...result,
+    };
+  }
+  /**
+   * @route POST /auth/reset-password
+   * @description Reset password using token
+   */
+  @ApiOperation({ summary: 'Reset password with token' })
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    const result = await this.authService.resetPassword(resetPasswordDto);
+    return {
+      success: true,
+      ...result,
+    };
+  }
+  /**
+   * @route PUT /auth/change-password
+   * @description Change password for logged-in user
+   */
+  @ApiOperation({ summary: 'Change password for authenticated user' })
+  @UseGuards(JwtAuthGuard)
+  @Put('change-password')
+  async changePassword(
+    @CurrentUser() user: { id: number },
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    const result = await this.authService.changePassword(
+      user.id,
+      changePasswordDto,
+    );
+    return {
+      success: true,
+      ...result,
+    };
+  }
+
+  /**
+   * @route POST /auth/logout
+   * @description Logout user and blacklist JWT token
+   */
+  @ApiOperation({ summary: 'Logout user and invalidate token' })
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(
+    @CurrentUser() user: { id: number },
+    @Req() request: Request,
+    @Body() logoutDto: LogoutDto,
+  ) {
+    // Extract token from Authorization header
+    const authHeader = request.headers['authorization'];
+    const token = authHeader?.split(' ')[1]; // Remove "Bearer " prefix
+
+    if (!token) {
+      throw new BadRequestException('No token provided for logout.');
+    }
+
+    const result = await this.authService.logout(
+      user.id,
+      token,
+      request.ip || 'unknown',
+      logoutDto,
+    );
+
+    return {
+      success: true,
+      ...result,
+    };
+  }
+
+  /**
+   * @route POST /auth/refresh
+   * @description Refresh JWT token without re-login
+   */
+  @ApiOperation({ summary: 'Refresh JWT access token' })
+  @Post('refresh')
+  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    const result = await this.authService.refreshToken(refreshTokenDto);
+    return {
+      success: true,
+      ...result,
+    };
+  }
+
+  /**
+   * @route POST /auth/resend-otp
+   * @description Resend OTP verification email
+   */
+  @ApiOperation({ summary: 'Resend OTP verification email' })
+  @Post('resend-otp')
+  async resendOtp(@Body() resendOtpDto: ResendOtpDto) {
+    const result = await this.authService.resendOtp(resendOtpDto);
+    return {
+      success: true,
+      ...result,
+    };
+  }
+
+  /**
+   * @route DELETE /auth/account
+   * @description Soft delete user account (requires password confirmation)
+   */
+  @ApiOperation({ summary: 'Delete user account (soft delete)' })
+  @UseGuards(JwtAuthGuard)
+  @Delete('account')
+  async deleteAccount(
+    @CurrentUser() user: { id: number },
+    @Req() request: Request,
+    @Body() deleteAccountDto: DeleteAccountDto,
+  ) {
+    const result = await this.authService.deleteAccount(
+      user.id,
+      deleteAccountDto,
+      request.ip || 'unknown',
+    );
+
+    return {
+      success: true,
+      ...result,
+    };
   }
 }

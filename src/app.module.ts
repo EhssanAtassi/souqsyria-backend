@@ -39,6 +39,8 @@ import { PaymentModule } from './payment/payment.module';
 import { RefundModule } from './refund/refund.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
 import { GuardsModule } from './common/guards/guards.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ProductionLoggerService } from './common/services/logger.service';
 
 @Module({
   imports: [
@@ -70,13 +72,30 @@ import { GuardsModule } from './common/guards/guards.module';
     RefundModule,
     AuditLogModule,
     GuardsModule,
+    ThrottlerModule.forRoot([
+      {
+        name: 'short',
+        ttl: 1000, // 1 second
+        limit: 3, // 3 requests per second
+      },
+      {
+        name: 'medium',
+        ttl: 60000, // 1 minute
+        limit: 100, // 100 requests per minute
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    ProductionLoggerService,
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

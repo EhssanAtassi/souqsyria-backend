@@ -43,12 +43,20 @@ export class AuditLog {
   subModule?: string; // e.g. 'bulk-orders', 'wholesale-pricing', 'b2b-quotes'
 
   // === ACTOR INFORMATION ===
-  @Column()
-  actorId: number;
+  @Column({ nullable: true })
+  actorId?: number;
 
   @Column({
     type: 'enum',
-    enum: ['admin', 'vendor', 'user', 'system', 'api_client', 'support_agent'],
+    enum: [
+      'admin',
+      'vendor',
+      'user',
+      'system',
+      'api_client',
+      'support_agent',
+      'anonymous',
+    ],
   })
   actorType:
     | 'admin'
@@ -56,7 +64,8 @@ export class AuditLog {
     | 'user'
     | 'system'
     | 'api_client'
-    | 'support_agent';
+    | 'support_agent'
+    | 'anonymous';
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'actorId' })
