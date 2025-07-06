@@ -14,6 +14,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   synchronize: true,
   dropSchema: true,
-  logging: false, // Enable logging to see what's happening
+  logging: true, // Enable logging to see what's happening
   cache: false, // Disable caching during schema recreation
 };

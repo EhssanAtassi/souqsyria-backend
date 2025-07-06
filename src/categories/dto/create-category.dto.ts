@@ -1,132 +1,230 @@
 /**
  * @file create-category.dto.ts
- * @description DTO for creating a new category with multilingual, icon/banner, hierarchy, SEO, and status fields.
+ * @description Enhanced DTO for creating categories with enterprise features
  */
-import { IsOptional, IsString, IsNotEmpty, IsNumber, IsBoolean } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsHexColor,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Length,
+  Matches,
+  Max,
+  Min,
+} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class CreateCategoryDto {
   @ApiProperty({
     example: 'Electronics',
     description: 'Category name in English',
+    minLength: 2,
+    maxLength: 100,
   })
   @IsString()
   @IsNotEmpty()
+  @Length(2, 100)
   nameEn: string;
 
   @ApiProperty({
     example: 'إلكترونيات',
     description: 'Category name in Arabic',
+    minLength: 2,
+    maxLength: 100,
   })
   @IsString()
   @IsNotEmpty()
+  @Length(2, 100)
   nameAr: string;
 
   @ApiProperty({
     example: 'electronics',
-    description: 'Slug for SEO friendly URLs',
+    description: 'SEO-friendly URL slug (lowercase, no spaces)',
+    pattern: '^[a-z0-9-]+$',
   })
   @IsString()
   @IsNotEmpty()
+  @Matches(/^[a-z0-9-]+$/, {
+    message: 'Slug must contain only lowercase letters, numbers, and hyphens',
+  })
+  @Transform(({ value }) => value?.toLowerCase().trim())
   slug: string;
 
-  @ApiProperty({
-    example: 'Devices, gadgets, and home electronics',
+  @ApiPropertyOptional({
+    example: 'Electronic devices, gadgets, and home electronics',
     description: 'Category description in English',
-    required: false,
+    maxLength: 500,
   })
   @IsOptional()
   @IsString()
+  @Length(0, 500)
   descriptionEn?: string;
 
-  @ApiProperty({
-    example: 'أجهزة وإلكترونيات منزلية',
+  @ApiPropertyOptional({
+    example: 'أجهزة إلكترونية ومنزلية وأدوات ذكية',
     description: 'Category description in Arabic',
-    required: false,
+    maxLength: 500,
   })
   @IsOptional()
   @IsString()
+  @Length(0, 500)
   descriptionAr?: string;
 
-  @ApiProperty({
-    example: 'https://cdn.souqsyria.com/categories/electronics-icon.png',
-    description: 'Optional Icon URL for category menu',
-    required: false,
+  @ApiPropertyOptional({
+    example: 'https://cdn.souqsyria.com/categories/electronics-icon.svg',
+    description: 'Category icon URL for navigation menus',
   })
   @IsOptional()
-  @IsString()
+  @IsUrl()
   iconUrl?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'https://cdn.souqsyria.com/categories/electronics-banner.jpg',
-    description: 'Optional Banner URL',
-    required: false,
+    description: 'Category banner image URL for category pages',
   })
   @IsOptional()
-  @IsString()
+  @IsUrl()
   bannerUrl?: string;
 
-  @ApiProperty({
-    example: 1,
-    description: 'Optional parent category ID (for hierarchy)',
-    required: false,
+  @ApiPropertyOptional({
+    example: '#2196F3',
+    description: 'Category theme color in hex format',
   })
   @IsOptional()
-  parentId?: number;
+  @IsHexColor()
+  themeColor?: string;
 
-  @ApiProperty({
-    example: 0,
-    description: 'Optional sort order',
-    required: false,
+  @ApiPropertyOptional({
+    example: 1,
+    description: 'Parent category ID for hierarchical structure',
+    minimum: 1,
   })
   @IsOptional()
   @IsNumber()
-  sortOrder?: number;
+  @Min(1)
+  parentId?: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
+    example: 100,
+    description: 'Sort order for category display (lower = higher priority)',
+    minimum: 0,
+    maximum: 9999,
+    default: 100,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(9999)
+  sortOrder?: number = 100;
+
+  @ApiPropertyOptional({
     example: true,
-    description: 'Is the category active?',
+    description: 'Whether the category is active and visible',
     default: true,
-    required: false,
   })
   @IsOptional()
   @IsBoolean()
   isActive?: boolean = true;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: false,
-    description: 'Is the category featured on homepage?',
+    description: 'Whether the category is featured on homepage',
     default: false,
-    required: false,
   })
   @IsOptional()
   @IsBoolean()
   isFeatured?: boolean = false;
 
-  @ApiProperty({
-    example: 'Buy electronics online at best price',
-    description: 'SEO Title',
-    required: false,
+  @ApiPropertyOptional({
+    example: true,
+    description: 'Whether to show category in navigation menus',
+    default: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  showInNav?: boolean = true;
+
+  // SEO Fields
+  @ApiPropertyOptional({
+    example: 'Electronics - Buy Online in Syria | SouqSyria',
+    description: 'SEO meta title for search engines',
+    maxLength: 200,
   })
   @IsOptional()
   @IsString()
+  @Length(0, 200)
   seoTitle?: string;
 
-  @ApiProperty({
-    example: 'Shop electronics, mobile phones, TVs, and more with fast delivery',
-    description: 'SEO Description',
-    required: false,
+  @ApiPropertyOptional({
+    example:
+      'Shop electronics, smartphones, TVs & more with fast delivery across Syria',
+    description: 'SEO meta description for search engines',
+    maxLength: 300,
   })
   @IsOptional()
   @IsString()
+  @Length(0, 300)
   seoDescription?: string;
 
-  @ApiProperty({
-    example: 'best-electronics-syria',
-    description: 'SEO Slug',
-    required: false,
+  @ApiPropertyOptional({
+    example: 'الكترونيات',
+    description: 'Arabic SEO slug for RTL URLs',
   })
   @IsOptional()
   @IsString()
   seoSlug?: string;
+
+  // Business Fields
+  @ApiPropertyOptional({
+    example: 5.5,
+    description: 'Commission rate percentage for products in this category',
+    minimum: 0.5,
+    maximum: 15,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(0.5)
+  @Max(15)
+  commissionRate?: number;
+
+  @ApiPropertyOptional({
+    example: 1000,
+    description: 'Minimum allowed product price in SYP',
+    minimum: 100,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(100)
+  minPrice?: number;
+
+  @ApiPropertyOptional({
+    example: 10000000,
+    description: 'Maximum allowed product price in SYP',
+    maximum: 100000000,
+  })
+  @IsOptional()
+  @IsNumber()
+  @Max(100000000)
+  maxPrice?: number;
+
+  // Enterprise Fields
+  @ApiPropertyOptional({
+    example: 1,
+    description: 'Tenant ID for multi-tenancy support',
+  })
+  @IsOptional()
+  @IsNumber()
+  tenantId?: number;
+
+  @ApiPropertyOptional({
+    example: 'syria-main',
+    description: 'Organization ID for enterprise grouping',
+  })
+  @IsOptional()
+  @IsString()
+  organizationId?: string;
 }

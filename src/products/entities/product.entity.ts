@@ -22,6 +22,7 @@ import { ProductVariant } from '../variants/entities/product-variant.entity';
 import { ProductFeatureEntity } from '../../features/entities/product-feature.entity';
 import { ProductAttribute } from './product-attribute.entity/product-attribute.entity';
 import { ProductPriceEntity } from '../pricing/entities/product-price.entity';
+import { Brand } from '../../brands/entities/brand.entity';
 
 @Entity('products')
 export class ProductEntity {
@@ -39,6 +40,10 @@ export class ProductEntity {
   @ManyToOne(() => Category)
   @JoinColumn({ name: 'category_id' })
   category: Category;
+
+  @ManyToOne(() => Brand, (brand) => brand.products, { nullable: true })
+  @JoinColumn({ name: 'brand_id' })
+  brand?: Brand;
 
   @Column({ name: 'name_en' })
   nameEn: string;

@@ -32,6 +32,7 @@ import { StockModule } from '../stock/stock.module';
 import { PricingModule } from './pricing/pricing.module';
 import { PublicModule } from './public/public.module';
 import { User } from '../users/entities/user.entity';
+import { Brand } from '../brands/entities/brand.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -48,6 +49,7 @@ import { User } from '../users/entities/user.entity';
       User,
       ProductFeatureEntity,
       FeatureEntity,
+      Brand,
     ]),
     ManufacturersModule,
     AccessControlModule,

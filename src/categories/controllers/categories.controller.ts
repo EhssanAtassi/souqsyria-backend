@@ -9,29 +9,29 @@
  * - All endpoints are admin-only and ACL protected
  */
 import {
-  Controller,
-  Post,
-  Get,
-  Put,
-  Delete,
   Body,
-  Param,
-  UseGuards,
+  Controller,
+  Delete,
+  Get,
   Logger,
+  Param,
   Patch,
+  Post,
+  Put,
+  UseGuards,
 } from '@nestjs/common';
-import { CategoriesService } from './categories.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoriesService } from '../services/categories.service';
+import { CreateCategoryDto } from '../dto/create-category.dto';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
 import {
-  ApiTags,
   ApiBearerAuth,
   ApiOperation,
   ApiParam,
+  ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../common/guards/roles.guards';
-import { Roles } from '../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guards';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @ApiTags('Admin Categories')
 @ApiBearerAuth()
